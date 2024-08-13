@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+Transaction = [ ] #Beancount中的第一行数据
+
 def get_current_time(): # Get the current time
     now = datetime.now()
     current_time = now.strftime("%Y-%m-%d") #格式化时间
@@ -50,20 +52,23 @@ def choose_date():
     return selected_date
 
 def create_Transaction_data():
-    Transaction = [ ] #Beancount中的第一行数据
     choice_book() #选择账本
     chosen_date = choose_date() #选择日期
     payee = input("请输入支出的对象: ") 
     Narration = input("请输入支出的描述: ")
     print(chosen_date)
-    Transaction = f"{chosen_date} * \"{payee}\" \"{Narration}\" \n" #Beancount中的第一行数据 
+    transaction = f"{chosen_date} * \"{payee}\" \"{Narration}\" \n" #Beancount中的第一行数据 
     selected_category = Create_Expenses_Entry()
-    Transaction += f"    {selected_category} " #Beancount中的第二行数据,开头空4个空格
+    transaction += f"    {selected_category} " #Beancount中的第二行数据,开头空4个空格
     amount = input("请输入支出的金额:(格式为12.00, 12.50) ")
-    Transaction += f"\t\t {amount} CNY\n" #Beancount中的第二行数据
+    transaction += f"\t\t {amount} CNY\n" #Beancount中的第二行数据
+    selected_assets = Create_Assets_Entry()
+    transaction += f"    {selected_assets} \t\t -{amount} CNY\n" #Beancount中的第三行数据
 
-
+    Transaction.append(transaction)
+    print("交易记录已经添加成功")
     print(Transaction)
+    return Transaction
 
 def Category_Choice(Input_Categories):
     for i, category in enumerate(Input_Categories):
@@ -244,7 +249,24 @@ def Create_Expenses_Entry():
         print("请输入正确的数字")
 
 def Create_Assets_Entry():
-    
+    Assets_Categories = [
+        "Assets:DebitCard:CN:PINGAN-6479",
+        "Assets:DebitCard:CN:ICBC-6641",
+        "Assets:DebitCard:CN:ABC-1273",
+        "Assets:Alipay:Balance",
+        "Assets:Cash:CN",
+        "Assets:Alipay:JA",
+        "Assets:Alipay:ETF",
+        "Assets:WeChat:Balance",
+        "Assets:WeChat:ETF",
+        "Assets:School:CampusCard",
+        "Assets:AliCloud",
+        "Assets:TencentCloud",
+    ]
+    selected_assets = Category_Choice(Assets_Categories)
+    print(f"你选择的资产类别是: {selected_assets}")
+    return selected_assets
+
 
 # chosen_date = choose_date()
 # print(chosen_date)
@@ -257,29 +279,36 @@ def create_book(): # Create a new book
 def add_expenses(): # Add expenses
     create_Transaction_data()
 
+def view_records(): # View records
+    print("所有记录")
+    for record in Transaction:
+        print(record)
 
-print ("\n" + "Welcome To The Easybeancount Program\n" + "现在的时间是: " + get_current_time())
-choice_temp = int(input(
-    "请输入您的选择:\n 1.创建账本\n 2.添加支出\n 3.添加收入\n 4.查看已编辑好的记录\n 5.将刚刚编写好的记录保存\n 6.退出\n"
-    ))
+while True:
 
-if choice_temp == 1:
-    create_book()
+    print ("\n" + "Welcome To The Easybeancount Program\n" + "现在的时间是: " + get_current_time())
+    choice_temp = int(input(
+        "请输入您的选择:\n 1.创建账本\n 2.添加支出\n 3.添加收入\n 4.查看已编辑好的记录\n 5.将刚刚编写好的记录保存\n 6.退出\n"
+        ))
 
-if choice_temp == 2:
-    add_expenses()
+    if choice_temp == 1:
+        create_book()
 
-if choice_temp == 3:
-    add_income()
+    if choice_temp == 2:
+        add_expenses()
 
-if choice_temp == 4:
-    view_records()
+    if choice_temp == 3:
+        add_income()
 
-if choice_temp == 5:
-    save_records()
+    if choice_temp == 4:
+        view_records()
 
-if choice_temp == 6:
-    print("感谢您的使用，再见！")
-    exit()
-if choice_temp == 0:
-    Create_Expenses_Entry()
+    if choice_temp == 5:
+        save_records()
+
+    if choice_temp == 6:
+        print("感谢您的使用，再见！")
+        exit()
+
+    if choice_temp == 0:
+        Create_Assets_Entry() 
