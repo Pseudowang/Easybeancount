@@ -17,6 +17,7 @@ def choice_book():
         else:
             open_books = choice_book + "-expenses" + ".bean"
             print("你目前正在编辑的是" + open_books + "账本")
+            return open_books
             break #输入正确 跳出循环
 
 
@@ -268,6 +269,11 @@ def view_records(): # View records
     for record in Transaction:
         print(record)
 
+def save_records(records, filename):
+    with open(filename, "a", encoding='utf-8') as file:
+        for record in records:
+            file.write(record + '\n')
+
 while True:
 
     print ("\n" + "Welcome To The Easybeancount Program\n" + "现在的时间是: " + get_current_time())
@@ -288,7 +294,10 @@ while True:
         view_records()
 
     if choice_temp == 5:
-        save_records()
+        # bookfilename = choice_book()
+        filename = input("请输入文件名: ")
+        save_records(Transaction, filename)
+        print(f"记录已保存到 {filename}")
 
     if choice_temp == 6:
         print("感谢您的使用，再见！")
