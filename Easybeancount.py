@@ -11,7 +11,7 @@ def choice_book():
     try_times = 0
     while try_times < 3 :
         choice_book = input("请输入你要编写几月份的账本(请务必输入08, 09):")
-        if len(choice_book) != 2 or not choice_book.isdigit() or not ("01" <= choice_book <= "12"):
+        if len(choice_book) != 2 or not choice_book.isdigit() or not ("01" <= choice_book <= "12"): #判断输入的月份是否正确
             print("请输入正确的月份!!!!(范围为01 - 12)")
             try_times += 1
         else:
@@ -20,7 +20,7 @@ def choice_book():
             break #输入正确 跳出循环
 
 
-def get_previous_dates(current_date, num_days=7):
+def get_previous_dates(current_date, num_days): #获取过去7天的日期
     dates = [ ]
     for i in range(num_days):
         data = current_date - timedelta(days=i) #时间差
@@ -67,7 +67,7 @@ def create_Transaction_data():
 
     Transaction.append(transaction)
     print("交易记录已经添加成功")
-    print(Transaction)
+    print(transaction)
     return Transaction
 
 def Category_Choice(Input_Categories):
@@ -91,6 +91,10 @@ def Category_Choice(Input_Categories):
         print("请输入正确的数字")
         return None
 
+def Cate_Choices_Output(Input_Categories):
+    selected_category = Category_Choice(Input_Categories)
+    print(f"你选择的支出类别是: {selected_category}")
+    return selected_category
     
 
 def Create_Expenses_Entry():
@@ -199,51 +203,31 @@ def Create_Expenses_Entry():
 
     Cate_Choice = input("1. 居家\n2. 人际\n3. 购物\n4. 餐饮\n5. 健康\n6. 娱乐\n7. 交通\n8. 税\n9. 投资\n")
     if Cate_Choice == "1":
-        # Category_Choice(Expenses_Categories_Home)
-        selected_category = Category_Choice(Expenses_Categories_Home)
-        print(f"你选择的支出类别是: {selected_category}")
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Home)
         
-
     elif Cate_Choice == "2":
-        selected_category = Category_Choice(Expenses_Categories_Relationship)
-        print(f"你选择的支出类别是: {selected_category}")
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Relationship)
 
     elif Cate_Choice == "3":
-        selected_category = Category_Choice(Expenses_Categories_Shopping)
-        print(f"你选择的支出类别是: {selected_category}")
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Shopping)
 
     elif Cate_Choice == "4":
-        selected_category = Category_Choice(Expenses_Categories_Food)
-        print(f"你选择的支出类别是: {selected_category}") 
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Food)
 
     elif Cate_Choice == "5":
-        selected_category = Category_Choice(Expenses_Categories_Health)
-        print(f"你选择的支出类别是: {selected_category}")
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Health)
     
     elif Cate_Choice == "6":
-        selected_category = Category_Choice(Expenses_Categories_Entertainment)
-        print(f"你选择的支出类别是: {selected_category}") 
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Entertainment)
 
     elif Cate_Choice == "7":
-        selected_category = Category_Choice(Expenses_Categories_Transport)
-        print(f"你选择的支出类别是: {selected_category}")
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Transport)
 
     elif Cate_Choice == "8":
-        selected_category = Category_Choice(Expenses_Categories_Government)
-        print(f"你选择的支出类别是: {selected_category}")
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Government)
     
     elif Cate_Choice == "9":
-        selected_category = Category_Choice(Expenses_Categories_Invest)
-        print(f"你选择的支出类别是: {selected_category}")
-        return selected_category
+        return Cate_Choices_Output(Expenses_Categories_Invest)
         
     else:
         print("请输入正确的数字")
