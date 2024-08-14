@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
-Transaction = [ ] #Transaction list for storing income and expense entries
+expenses_tran = [ ] #Transaction list for storing expense entries
+income_tran = [ ] #Transaction list for storing income entries
 
 def get_current_time(): # Get the current time
     now = datetime.now() 
@@ -14,11 +15,25 @@ def choice_book(): #Chose The Book
         if len(choice_book) != 2 or not choice_book.isdigit() or not ("01" <= choice_book <= "12"): #判断输入的月份是否正确
             print("请输入正确的月份!!!!(范围为01 - 12)")
             try_times += 1
+
+        #If you have multiple income book, you can cancel the comment of the following code
+        # elif legder_selection == 2: 
         else:
             open_books = choice_book + "-expenses" + ".bean"
             print("你目前正在编辑的是" + open_books + "账本")
             return open_books
             break #Exit the loop if the input is correct
+
+        # Because I only hava one income book, so I don't need to choose the income book
+        # elif legder_selection == 3:
+        #     open_books = choice_book + "-income" + ".bean"
+        #     print("你目前正在编辑的是" + open_books + "账本")
+        #     return open_books
+        #     break #Exit the loop if the input is correct
+
+        # else:
+        #     print("请输入正确的数字")
+        #     try_times += 1
 
 
 def get_previous_dates(current_date, num_days): #Get the previous 9 days
@@ -77,7 +92,7 @@ def cate_choices_print(input_ex_cate):
     print(f"你选择的支出类别是: {selected_category}")
     return selected_category
     
-def create_Transaction_data():
+def create_expenses_transaction():
     #temp_tran is Temporary Transaction data
 
     choice_book() #Choose the bill
@@ -86,25 +101,47 @@ def create_Transaction_data():
     Narration = input("请输入支出的描述: ")
     print(chosen_date)
 
-    selected_category = Create_Expenses_Entry() #Selected the Expenses Categorys
+    selected_category = create_expenses_entry() #Selected the Expenses Categorys
     amount = input("请输入支出的金额:(格式为12.00, 12.50) ")
-    selected_assets = Create_Assets_Entry()
+    selected_assets = create_assets_entry()
 
     temp_tran = f"{chosen_date} * \"{payee}\" \"{Narration}\" \n" #Beancoune Payee and Narration data 
     temp_tran += f"    {selected_category} " #Beancount Expenses Entry datas
     temp_tran += f"\t\t {amount} CNY\n" # Expenses Entry Amount
     temp_tran += f"    {selected_assets} \t\t -{amount} CNY\n" #Beancount中的第三行数据
 
-    Transaction.append(temp_tran)
+    expenses_tran.append(temp_tran)
     print("交易记录已经添加成功!!!")
     print(temp_tran)
-    return Transaction
+    return expenses_tran
+
+def create_income_transaction():
+    open_books = "income.bean"
+    print(f"你目前正在编辑的是{open_books}账本")
+    chosen_date = choose_date()
+    payee = input("请输入收入的对象: ")
+    Narration = input("请输入收入的描述: ")
+    print(chosen_date)
+
+    selected_category = create_income_entry()
+    amount = input("请输入收入的金额:(格式为12.00, 12.50) ")
+    selected_assets = create_assets_entry()
+
+    temp_tran = f"{chosen_date} * \"{payee}\" \"{Narration}\" \n"
+    temp_tran += f"    {selected_category} "
+    temp_tran += f"\t\t -{amount} CNY\n"
+    temp_tran += f"    {selected_assets} \t\t {amount} CNY\n"
+
+    income_tran.append(temp_tran)
+    print("交易记录已经添加成功!!!")
+    print(temp_tran)
+    return income_tran
 
 
-    
 
-def Create_Expenses_Entry():
-    Expenses_Categories_Home = [
+
+def create_expenses_entry():
+    expenses_categories_home = [
         "Expenses:Home:Phone",
         "Expenses:Home:SDRQ",
         "Expenses:Home:Washer",
@@ -122,7 +159,7 @@ def Create_Expenses_Entry():
         "Expenses:Home:WYF",
     ]
 
-    Expenses_Categories_Relationship = [
+    expenses_categories_relationship = [
         "Expenses:Relationship:Gift",
         "Expenses:Relationship:Relative",
         "Expenses:Relationship:PrePayment",
@@ -131,7 +168,7 @@ def Create_Expenses_Entry():
         "Expenses:Relationship:Other",
     ]
 
-    Expenses_Categories_Shopping = [
+    expenses_categories_shopping = [
         "Expenses:Shopping:Clothing",
         "Expenses:Shopping:Digital",
         "Expenses:Shopping:Home",
@@ -142,7 +179,7 @@ def Create_Expenses_Entry():
         "Expenses:Shopping:Other",
     ]
 
-    Expenses_Categories_Food = [
+    expenses_categories_food = [
         "Expenses:Food:Breakfast",
         "Expenses:Food:Lunch",
         "Expenses:Food:Dinner",
@@ -154,14 +191,14 @@ def Create_Expenses_Entry():
         "Expenses:Food:Snack",
     ]
 
-    Expenses_Categories_Health = [
+    expenses_categories_health = [
         "Expenses:Health:Outpatient",
         "Expenses:Health:Medical",
         "Expenses:Health:Examination",
         "Expenses:Health:Other",
     ]
 
-    Expenses_Categories_Entertainment = [
+    expenses_categories_entertainment = [
         "Expenses:Entertainment:Movie",
         "Expenses:Entertainment:Travel",
         "Expenses:Entertainment:Hotel",
@@ -172,7 +209,7 @@ def Create_Expenses_Entry():
         "Expenses:Entertainment:Other"
     ]
 
-    Expenses_Categories_Transport = [
+    expenses_categories_transport = [
         "Expenses:Transport:Airline",
         "Expenses:Transport:Railway",
         "Expenses:Transport:TAXI",
@@ -188,7 +225,7 @@ def Create_Expenses_Entry():
         "Expenses:Transport:Other",
     ]
 
-    Expenses_Categories_Government = [  
+    expenses_categories_government = [  
         "Expenses:Government:Pension",
         "Expenses:Government:Unemployment",
         "Expenses:Government:Medical",
@@ -199,7 +236,7 @@ def Create_Expenses_Entry():
         "Expenses:Government:Other",
     ]
 
-    Expenses_Categories_Invest = [
+    expenses_categories_invest = [
         "Expenses:Invest:Dev",
         "Expenses:Invest:Study",
         "Expenses:Invest:Portfolio:Interest",
@@ -209,36 +246,58 @@ def Create_Expenses_Entry():
 
     Cate_Choice = input("1. 居家\n2. 人际\n3. 购物\n4. 餐饮\n5. 健康\n6. 娱乐\n7. 交通\n8. 税\n9. 投资\n")
     if Cate_Choice == "1":
-        return cate_choices_print(Expenses_Categories_Home)
+        return cate_choices_print(expenses_categories_home)
         
     elif Cate_Choice == "2":
-        return cate_choices_print(Expenses_Categories_Relationship)
+        return cate_choices_print(expenses_categories_relationship)
 
     elif Cate_Choice == "3":
-        return cate_choices_print(Expenses_Categories_Shopping)
+        return cate_choices_print(expenses_categories_shopping)
 
     elif Cate_Choice == "4":
-        return cate_choices_print(Expenses_Categories_Food)
+        return cate_choices_print(expenses_categories_food)
 
     elif Cate_Choice == "5":
-        return cate_choices_print(Expenses_Categories_Health)
+        return cate_choices_print(expenses_categories_health)
     
     elif Cate_Choice == "6":
-        return cate_choices_print(Expenses_Categories_Entertainment)
+        return cate_choices_print(expenses_categories_entertainment)
 
     elif Cate_Choice == "7":
-        return cate_choices_print(Expenses_Categories_Transport)
+        return cate_choices_print(expenses_categories_transport)
 
     elif Cate_Choice == "8":
-        return cate_choices_print(Expenses_Categories_Government)
+        return cate_choices_print(expenses_categories_government)
     
     elif Cate_Choice == "9":
-        return cate_choices_print(Expenses_Categories_Invest)
+        return cate_choices_print(expenses_categories_invest)
         
     else:
         print("请输入正确的数字")
 
-def Create_Assets_Entry():
+def create_income_entry():
+    income_categories = [
+        "Income:CN:Salary:XYZ",
+        "Income:CN:Salary:MUJI",
+        "Income:CN:RedEnvelope",
+        "Income:CN:Allowance",
+        "Income:CN:School",
+        "Income:CN:Tip",
+        "Income:PassiveIncome:Project",
+        "Income:PassiveIncome:Invest",
+        "Income:PassiveIncome:Other",
+        "Income:CN:Extra",
+        "Income:CN:Rebate",
+        "Income:CN:Invest",
+        "Income:CN:Compensation",
+        "Income:CN:Sales",
+        "Income:CN:Other",
+    ]
+    selected_income = expenses_cate_sel(income_categories)
+    print(f"你选择的收入类别是: {selected_income}")
+    return selected_income
+
+def create_assets_entry():
     Assets_Categories = [
         "Assets:DebitCard:CN:PINGAN-6479",
         "Assets:DebitCard:CN:ICBC-6641",
@@ -258,8 +317,6 @@ def Create_Assets_Entry():
     return selected_assets
 
 
-# chosen_date = choose_date()
-# print(chosen_date)
 
 def create_book(): # Create a new book
     print("功能开发中...")
@@ -267,11 +324,14 @@ def create_book(): # Create a new book
     # book = open(book_name + ".bean", "w")
 
 def add_expenses(): # Add expenses
-    create_Transaction_data()
+    create_expenses_transaction()
+
+def add_income(): # Add income
+    create_income_transaction()
 
 def view_records(): # View records
     print("所有记录")
-    for record in Transaction:
+    for record in expenses_tran:
         print(record)
 
 def save_records(records, filename):
@@ -290,23 +350,37 @@ while True:
         create_book()
 
     if choice_temp == 2:
+        legder_selection = 2
         add_expenses()
 
     if choice_temp == 3:
+        legder_selection = 3
         add_income()
 
     if choice_temp == 4:
         view_records()
 
     if choice_temp == 5:
-        # bookfilename = choice_book()
-        filename = input("请输入文件名: ")
-        save_records(Transaction, filename)
-        print(f"记录已保存到 {filename}")
+        type_selection = int(input("请选择要保存的类型(1.支出 2.收入): "))
+        if type_selection == 1:
+            filename = choice_book()
+            save_records(expenses_tran, filename)
+            print(f"记录已保存到 {filename}")
+
+        elif type_selection == 2:
+            filename = "income.bean"
+            save_records(income_tran, filename)
+            print(f"记录已保存到 {filename}")
+
+        else:
+            print("请输入正确的数字")
+        # filename = input("请输入文件名: ")
+        # save_records(expenses_tran, filename)
+        # print(f"记录已保存到 {filename}")
 
     if choice_temp == 6:
         print("感谢您的使用，再见！")
         exit()
 
     if choice_temp == 0:
-        Create_Assets_Entry() 
+        create_assets_entry() 

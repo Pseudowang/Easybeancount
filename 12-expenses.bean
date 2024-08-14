@@ -1,0 +1,8 @@
+2024-08-15 * "test1" "test22" 
+    Expenses:Transport:TAXI 		 12.80 CNY
+    Assets:DebitCard:CN:PINGAN-6479 		 -12.80 CNY
+
+2024-08-15 * "测试" "中文测试" 
+    Expenses:Home:Phone 		 123.00 CNY
+    Assets:DebitCard:CN:PINGAN-6479 		 -123.00 CNY
+
