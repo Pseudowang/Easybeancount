@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
 
-Transaction = [ ] #Beancount中的第一行数据
+Transaction = [ ] #Transaction list for storing income and expense entries
 
 def get_current_time(): # Get the current time
-    now = datetime.now()
+    now = datetime.now() 
     current_time = now.strftime("%Y-%m-%d") #格式化时间
     return current_time
 
-def choice_book():
+def choice_book(): #Chose The Book
     try_times = 0
-    while try_times < 3 :
+    while try_times < 3 : #Up to three attempts
         choice_book = input("请输入你要编写几月份的账本(请务必输入08, 09):")
         if len(choice_book) != 2 or not choice_book.isdigit() or not ("01" <= choice_book <= "12"): #判断输入的月份是否正确
             print("请输入正确的月份!!!!(范围为01 - 12)")
@@ -18,61 +18,42 @@ def choice_book():
             open_books = choice_book + "-expenses" + ".bean"
             print("你目前正在编辑的是" + open_books + "账本")
             return open_books
-            break #输入正确 跳出循环
+            break #Exit the loop if the input is correct
 
 
-def get_previous_dates(current_date, num_days): #获取过去7天的日期
+def get_previous_dates(current_date, num_days): #Get the previous 9 days
     dates = [ ]
     for i in range(num_days):
         data = current_date - timedelta(days=i) #时间差
         dates.append(data.strftime("%Y-%m-%d")) #格式化时间
     return dates
 
-def choose_date():
+def choose_date(): #Select the bill date
     current_date = datetime.now()
-    dates = get_previous_dates(current_date, 9)
+    bill_dates = get_previous_dates(current_date, 9)
 
     print("以下是过去9天的日期:")
-    for i, date in enumerate(dates): #将datas的索引和数据一起打印出来,并赋值给i 和 date
-        print(f"{i + 1}. {date}") #打印出来的是索引+1 和 数据
+    for i, date in enumerate(bill_dates): #Print the index and data of `bill_dates` together and assign them to `i` and `date`
+        print(f"{i + 1}. {date}") #Print the index + 1 and the date
     print("0. 自行输入日期")
 
     while True:
-        choice = input("请选择日期: (回车默认当天日期)")
-        if choice == "":
+        date_sel = input("请选择日期: (回车默认当天日期)")
+        if date_sel == "": #If the input is empty, the current date is selected
             selected_date = current_date.strftime("%Y-%m-%d")
             break
-        elif choice.isdigit() and 1 <= int(choice) <= len(dates):
-            selected_date = dates[int(choice) - 1]
+        elif date_sel.isdigit() and 1 <= int(date_sel) <= len(bill_dates):
+            selected_date = bill_dates[int(date_sel) - 1]
             break
-        elif choice == "0":
+        elif date_sel == "0":
             print("上面没有你想要的日期，请自行输入，格式为(2024-08-01)")
         else:
             print("请输入正确的日期")
     print(f"你选择的日期是: {selected_date}")
     return selected_date
 
-def create_Transaction_data():
-    choice_book() #选择账本
-    chosen_date = choose_date() #选择日期
-    payee = input("请输入支出的对象: ") 
-    Narration = input("请输入支出的描述: ")
-    print(chosen_date)
-    transaction = f"{chosen_date} * \"{payee}\" \"{Narration}\" \n" #Beancount中的第一行数据 
-    selected_category = Create_Expenses_Entry()
-    transaction += f"    {selected_category} " #Beancount中的第二行数据,开头空4个空格
-    amount = input("请输入支出的金额:(格式为12.00, 12.50) ")
-    transaction += f"\t\t {amount} CNY\n" #Beancount中的第二行数据
-    selected_assets = Create_Assets_Entry()
-    transaction += f"    {selected_assets} \t\t -{amount} CNY\n" #Beancount中的第三行数据
-
-    Transaction.append(transaction)
-    print("交易记录已经添加成功")
-    print(transaction)
-    return Transaction
-
-def Category_Choice(Input_Categories):
-    for i, category in enumerate(Input_Categories):
+def expenses_cate_sel(input_ex_cate):
+    for i, category in enumerate(input_ex_cate): #Print the index and data of `input_ex_cate` together and assign them to `i` and `category`
         print(f"{i+1}. {category}")
 
     choice = input("请选择支出的类别: ")
@@ -84,18 +65,42 @@ def Category_Choice(Input_Categories):
         return None
     
 
-    if 1 <= Expenses_Choice <= len(Input_Categories):
-        Selected_Category = Input_Categories[int(Expenses_Choice) - 1]
-        #print(f"你选择的支出类别是: {Selected_Category}")
+    if 1 <= Expenses_Choice <= len(input_ex_cate):
+        Selected_Category = input_ex_cate[int(Expenses_Choice) - 1] #index start from 0
         return Selected_Category
     else:
         print("请输入正确的数字")
         return None
 
-def Cate_Choices_Output(Input_Categories):
-    selected_category = Category_Choice(Input_Categories)
+def cate_choices_print(input_ex_cate):
+    selected_category = expenses_cate_sel(input_ex_cate) #Get the index number of the selected category
     print(f"你选择的支出类别是: {selected_category}")
     return selected_category
+    
+def create_Transaction_data():
+    #temp_tran is Temporary Transaction data
+
+    choice_book() #Choose the bill
+    chosen_date = choose_date() #Select the bill date
+    payee = input("请输入支出的对象: ") 
+    Narration = input("请输入支出的描述: ")
+    print(chosen_date)
+
+    selected_category = Create_Expenses_Entry() #Selected the Expenses Categorys
+    amount = input("请输入支出的金额:(格式为12.00, 12.50) ")
+    selected_assets = Create_Assets_Entry()
+
+    temp_tran = f"{chosen_date} * \"{payee}\" \"{Narration}\" \n" #Beancoune Payee and Narration data 
+    temp_tran += f"    {selected_category} " #Beancount Expenses Entry datas
+    temp_tran += f"\t\t {amount} CNY\n" # Expenses Entry Amount
+    temp_tran += f"    {selected_assets} \t\t -{amount} CNY\n" #Beancount中的第三行数据
+
+    Transaction.append(temp_tran)
+    print("交易记录已经添加成功!!!")
+    print(temp_tran)
+    return Transaction
+
+
     
 
 def Create_Expenses_Entry():
@@ -204,31 +209,31 @@ def Create_Expenses_Entry():
 
     Cate_Choice = input("1. 居家\n2. 人际\n3. 购物\n4. 餐饮\n5. 健康\n6. 娱乐\n7. 交通\n8. 税\n9. 投资\n")
     if Cate_Choice == "1":
-        return Cate_Choices_Output(Expenses_Categories_Home)
+        return cate_choices_print(Expenses_Categories_Home)
         
     elif Cate_Choice == "2":
-        return Cate_Choices_Output(Expenses_Categories_Relationship)
+        return cate_choices_print(Expenses_Categories_Relationship)
 
     elif Cate_Choice == "3":
-        return Cate_Choices_Output(Expenses_Categories_Shopping)
+        return cate_choices_print(Expenses_Categories_Shopping)
 
     elif Cate_Choice == "4":
-        return Cate_Choices_Output(Expenses_Categories_Food)
+        return cate_choices_print(Expenses_Categories_Food)
 
     elif Cate_Choice == "5":
-        return Cate_Choices_Output(Expenses_Categories_Health)
+        return cate_choices_print(Expenses_Categories_Health)
     
     elif Cate_Choice == "6":
-        return Cate_Choices_Output(Expenses_Categories_Entertainment)
+        return cate_choices_print(Expenses_Categories_Entertainment)
 
     elif Cate_Choice == "7":
-        return Cate_Choices_Output(Expenses_Categories_Transport)
+        return cate_choices_print(Expenses_Categories_Transport)
 
     elif Cate_Choice == "8":
-        return Cate_Choices_Output(Expenses_Categories_Government)
+        return cate_choices_print(Expenses_Categories_Government)
     
     elif Cate_Choice == "9":
-        return Cate_Choices_Output(Expenses_Categories_Invest)
+        return cate_choices_print(Expenses_Categories_Invest)
         
     else:
         print("请输入正确的数字")
@@ -248,7 +253,7 @@ def Create_Assets_Entry():
         "Assets:AliCloud",
         "Assets:TencentCloud",
     ]
-    selected_assets = Category_Choice(Assets_Categories)
+    selected_assets = expenses_cate_sel(Assets_Categories)
     print(f"你选择的资产类别是: {selected_assets}")
     return selected_assets
 
@@ -276,7 +281,7 @@ def save_records(records, filename):
 
 while True:
 
-    print ("\n" + "Welcome To The Easybeancount Program\n" + "现在的时间是: " + get_current_time())
+    print ( "Welcome To The Easybeancount Program\n" + "现在的时间是: " + get_current_time())
     choice_temp = int(input(
         "请输入您的选择:\n 1.创建账本\n 2.添加支出\n 3.添加收入\n 4.查看已编辑好的记录\n 5.将刚刚编写好的记录保存\n 6.退出\n"
         ))
