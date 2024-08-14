@@ -2,3 +2,11 @@
     Income:CN:Salary:XYZ 		 -1000.00 CNY
     Assets:DebitCard:CN:PINGAN-6479 		 1000.00 CNY
 
+2024-08-15 * "上吧" "meituan " 
+    Income:CN:Salary:XYZ 		 -123.00 CNY
+    Assets:DebitCard:CN:PINGAN-6479 		 123.00 CNY
+
+2024-08-15 * "美团外卖" "跑腿收入" 
+    Income:CN:Salary:XYZ 		 -40.50 CNY
+    Assets:DebitCard:CN:PINGAN-6479 		 40.50 CNY
+

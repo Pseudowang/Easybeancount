@@ -330,8 +330,12 @@ def add_income(): # Add income
     create_income_transaction()
 
 def view_records(): # View records
-    print("所有记录")
+    print("所有的支出记录")
     for record in expenses_tran:
+        print(record)
+
+    print("所有的收入记录")
+    for record in income_tran:
         print(record)
 
 def save_records(records, filename):
