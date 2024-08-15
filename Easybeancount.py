@@ -36,7 +36,6 @@ def choice_book(): #Chose The Book
         #     print("请输入正确的数字")
         #     try_times += 1
 
-
 def get_previous_dates(current_date, num_days): #Get the previous 9 days
     dates = [ ]
     for i in range(num_days):
