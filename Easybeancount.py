@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 expenses_tran = [ ] #Transaction list for storing expense entries
 income_tran = [ ] #Transaction list for storing income entries
+book_init = [ ] #Book list for storing book information
 
 def get_current_time(): # Get the current time
     now = datetime.now() 
@@ -318,10 +319,19 @@ def create_assets_entry():
 
 
 
+
 def create_book(): # Create a new book
-    print("功能开发中...")
-    # book_name = input("请输入账本名称: ")
-    # book = open(book_name + ".bean", "w")
+    book_name = input("请输入你要创建的账本名称: (格式为: 08-expenses)")
+    book_title = input("请输入账本的标题: ")
+    book_currency = input("请输入账本的货币: ")
+    book_infor = f";[账本信息]\n"
+    book_infor += f"option \"title\" \"{book_title}\"\n"
+    book_infor += f"option \"operating_currency\" \"{book_currency}\"\n"
+    book_init.append(book_infor)
+    save_records(book_init, book_name + ".bean")
+    
+
+
 
 def add_expenses(): # Add expenses
     create_expenses_transaction()
