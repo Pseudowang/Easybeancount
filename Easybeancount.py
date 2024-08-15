@@ -62,7 +62,8 @@ def choose_date(): #Select the bill date
             selected_date = bill_dates[int(date_sel) - 1]
             break
         elif date_sel == "0":
-            print("上面没有你想要的日期，请自行输入，格式为(2024-08-01)")
+            selected_date = input("上面没有你想要的日期，请自行输入，格式为(2024-08-01)")
+            break
         else:
             print("请输入正确的日期")
     print(f"你选择的日期是: {selected_date}")
